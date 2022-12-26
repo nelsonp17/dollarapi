@@ -1,5 +1,6 @@
 {
     "name": "org/dollarapi",
+    "description": "Una API con el balance del dolar venezolano",
     "authors": [
         {
             "name": "Nelson Portillo",
