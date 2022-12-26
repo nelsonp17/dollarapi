@@ -1,4 +1,12 @@
 {
+    "name": "org/dollarapi",
+    "authors": [
+        {
+            "name": "Nelson Portillo",
+            "email": "nelsonportillo982@gmail.com",
+        }
+    ],
+    "license": "MIT",
     "require": {
         "spekulatius/phpscraper": "^1.0"
     }
