@@ -9,6 +9,19 @@
     ],
     "license": "MIT",
     "require": {
-        "spekulatius/phpscraper": "^1.0"
+        "spekulatius/phpscraper": "^1.0",
+        "vlucas/phpdotenv": "^5.5",
+        "nesbot/carbon": "^2.70"
+    },
+    "autoload": {
+        "psr-4": {
+            "Config\\": "config",
+            "Controllers\\": "Controllers",
+            "Models\\": "Models",
+            "Test\\": "test",
+            "Router\\": "Router",
+            "Views\\": "Views"
+        }
     }
+  
 }

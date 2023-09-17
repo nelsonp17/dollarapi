@@ -1,0 +1,33 @@
+# Ignorar archivos y directorios generados por el sistema
+.DS_Store
+Thumbs.db
+
+# Ignorar archivos de configuración específicos del entorno
+.env
+.env.*
+
+# Ignorar directorios de dependencias y archivos de bloqueo de Composer
+/vendor/
+composer.lock
+
+# Ignorar directorios y archivos generados por IDEs
+.idea/
+.vscode/
+
+# Ignorar archivos de registro y almacenamiento de errores
+/log/
+/error.log
+
+# Ignorar archivos y directorios de caché
+/cache/
+/public/uploads/
+
+# Ignorar archivos de respaldo
+*.bak
+*.swp
+*.~ 
+
+# Ignorar archivos de configuración personalizados
+config.php
+
+# Ignorar cualquier otro archivo o directorio que desees excluir del repositorio
