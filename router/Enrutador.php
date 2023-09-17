@@ -4,9 +4,11 @@ namespace Router;
 
 class Enrutador {
     private $routes = [];
-    private $routeGroups = [];
     private $itemGroups = [];
     private $group = false;
+    private $middlewares = [];
+    private $method1Called = false;
+    private $middlewareGroup = null;
 
     public function group($prefix, $callback) {
         $this->group = true;
@@ -18,73 +20,164 @@ class Enrutador {
             $method = $route['method'];
             $path = $prefix . $route['path'];
             $callback = $route['callback'];
-            $this->addRoute($method, $path, $callback);
+            $name = (isset($route['name'])) ? $route['name'] : null;
+            $middlewares = $route['middlewares'];
+            
+            $this->addRoute($method, $path, $callback, $name, $middlewares);
         }
         $this->itemGroups = [];
         $this->group = false;
+        return $this; // Retorna la instancia de la clase
     }
 
-    public function addRoute($method, $path, $callback) {
+    public function addRoute($method, $path, $callback, $name = null, $middleware = null) {
+        $middlewares = [];
+
+        foreach ($this->routes as &$route) {
+            if ($route['path'] === $path) {
+                $middlewares = $route['middlewares'];
+                break;
+            }
+        }
+        if($middleware!=null){
+            $middlewares = $middleware;
+        }
+        
         $this->routes[] = [
             'method' => $method,
             'path' => $path,
-            'callback' => $callback
+            'callback' => $callback,
+            'name' => $name,
+            'middlewares' => $middlewares
         ];
+
+        $this->method1Called = true;
+        return $this; // Retorna la instancia de la clase
     }
-    public function addItemGroup($method, $path, $callback){
+    public function addMiddleware($callback) {
+        $this->middlewares[] = $callback;
+        $this->method1Called = true;
+        return $this; // Retorna la instancia de la clase
+    }
+
+    public function middleware($middleware) {
+        if ($this->method1Called) {
+            // Lógica del método
+        } else {
+            //method2 debe ser llamado después de method1
+        }
+        if($this->middlewareGroup!=null){
+            foreach ($this->itemGroups as &$route) {
+                if ($route['path'] === $this->middlewareGroup) {
+                    $route['middlewares'][] = $middleware;
+                    break;
+                }
+            }
+
+            $this->middlewareGroup = null;
+        }else{
+            // Agregar el middleware a la última ruta agregada
+            $lastRouteIndex = count($this->routes) - 1;
+            $this->routes[$lastRouteIndex]['middlewares'][] = $middleware;
+
+            $this->method1Called = true;
+        }
+
+        return $this; // Devolver el objeto enrutador para permitir el encadenamiento de métodos
+    }
+    /*private function executeMiddlewares() {
+        foreach ($this->middlewares as $middleware) {
+            $middleware();
+        }
+    }*/
+
+    private function executeMiddlewares($middlewares) {
+        foreach ($middlewares as $middleware) {
+            $middleware();
+        }
+    }
+    public function addItemGroup($method, $path, $callback, $name = null, $middleware=null){
+        $middlewares = [];
+
+        foreach ($this->itemGroups as &$route) {
+            if ($route['path'] === $path) {
+                $middlewares = $route['middlewares'];
+                break;
+            }
+        }
+        if($middleware!=null){
+            $middlewares[] = $middleware;
+        }
+
         $this->itemGroups[] = [
             'method' => $method,
             'path' => $path,
-            'callback' => $callback
+            'callback' => $callback,
+            'middlewares' => $middlewares
         ];
     }
 
-    public function get($path, $callback){
+    private function methodStruct($method, $path, $callback, $name = null, $middleware=null){
         if($this->group === false){
-            $this->addRoute('GET', $path, $callback);
+            $this->addRoute($method, $path, $callback, $name, $middleware);
         }else{
-            $this->addItemGroup('GET', $path, $callback);
+            $this->addItemGroup($method, $path, $callback, $name, $middleware);
+            $this->middlewareGroup = $path;
         }
-        
+
+        $this->method1Called = true;
+        return $this; // Retorna la instancia de la clase
     }
 
-    public function post($path, $callback){
-        if($this->group === false){
-            $this->addRoute('POST', $path, $callback);
-        }else{
-            $this->addItemGroup('POST', $path, $callback);
-        }
+    public function get($path, $callback, $name = null, $middleware=null){
+        return $this->methodStruct("GET", $path, $callback, $name, $middleware);
     }
 
-    public function put($path, $callback){
-        if( $this->group === false){
-            $this->addRoute('PUT', $path, $callback);
-        }else{
-            $this->addItemGroup('PUT', $path, $callback);
-        }
+    public function post($path, $callback, $name = null, $middleware=null){
+        return $this->methodStruct("POST", $path, $callback, $name, $middleware);
     }
 
-    public function delete($path, $callback){
-        if($this->group === false){
-            $this->addRoute('DELETE', $path, $callback);
-        }else{
-            $this->addItemGroup('DELETE', $path, $callback);
-        }
+    public function put($path, $callback, $name = null, $middleware=null){
+        return $this->methodStruct("PUT", $path, $callback, $name, $middleware);
     }
 
-    public function patch($path, $callback){
-        if( $this->group === false){
-            $this->addRoute('PATCH', $path, $callback);
-        }else{
-            $this->addItemGroup('PATCH', $path, $callback);
-        }
+    public function delete($path, $callback, $name = null, $middleware=null){
+        return $this->methodStruct("DELETE", $path, $callback, $name, $middleware);
     }
 
+    public function patch($path, $callback, $name = null, $middleware=null){
+        return $this->methodStruct("PATCH", $path, $callback, $name, $middleware);
+    }
 
-    
+    public function getRouteByName($name) {
+        foreach ($this->routes as $route) {
+            if ($route['name'] === $name) {
+                return $route['path'];
+            }
+        }
+        return null;
+    }
+
 
     function handleRequest($method, $path) {
+        // Ejecutar los middlewares globales antes de manejar las rutas
+        $this->executeMiddlewares($this->middlewares);
+
         $matchedRoute = null;
+
+        foreach ($this->routes as $route) {
+            if ($route['method'] === $method && $route['path'] === $path) {
+                // Ejecutar los middlewares específicos de la ruta antes de manejar la ruta
+                
+                //echo "<br>";
+                //var_dump($route['middlewares']);
+                //echo "<br>";
+                //echo "<br>";
+
+                $this->executeMiddlewares($route['middlewares']);
+                break;
+            }
+        }
     
         foreach ($this->routes as $route) {
             $routePath = $route['path'];
@@ -117,6 +210,7 @@ class Enrutador {
             if ($route['method'] === $method && $route['path'] === $path) {
                 $callback = $route['callback'];
                 $this->executeCallback($callback);
+                $matchedRoute = $route;
             }
         }
         // Si no se encuentra ninguna ruta coincidente, puedes mostrar una página de error o redirigir a una ruta predeterminada.

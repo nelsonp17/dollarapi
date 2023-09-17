@@ -4,13 +4,33 @@ use Router\Enrutador;
 
 $router = new Enrutador();
 
+/*
+// Middleware para autenticación
+$router->addMiddleware(function() {
+    // Lógica para verificar la autenticación del usuario
+    if (!isLoggedIn()) {
+        header("HTTP/1.0 401 Unauthorized");
+        echo "No estás autenticado";
+        exit();
+    }
+});
+
+// Ruta protegida por autenticación
+$router->get('/profile', function() {
+    echo "Bienvenido a tu perfil";
+});
+*/
+
 // Definir rutas
 $router->addRoute('GET', '/', function() {
     echo "¡Hola, esta es la página de inicio!";
-});
+}, "home");
 
 $router->addRoute('GET', '/about', function() {
     echo "Esta es la página de acerca de nosotros";
+})->middleware(function() {
+    // Lógica del middleware para la ruta '/api/users'
+    echo "Este es un middleware para la ruta de usuarios de la API <br>";
 });
 
 $router->addRoute('POST', '/contact', function() {
@@ -18,11 +38,17 @@ $router->addRoute('POST', '/contact', function() {
 });
 
 
+
 $router->group('/api', function() use ($router)  {
 
     $router->get('/users', function() {
         echo "Esta es la página de usuarios";
+    })->middleware(function() {
+        // Lógica del middleware para la ruta '/api/users'
+        echo "Este es un middleware para la ruta de usuarios de la API <br>";
     });
+    
+
     $router->get('/user/{id}', function($matches) {
         $userId = $matches[1]; 
         echo "Usuario: ". $userId;
@@ -33,6 +59,9 @@ $router->group('/api', function() use ($router)  {
     });
 });
 
+// Obtener la ruta por su nombre
+//$route = $router->getRouteByName('home');
+//echo "La ruta de la página de inicio es: " . $route;
 
 /**
  * 

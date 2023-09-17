@@ -1,23 +1,23 @@
 <?php
 
     /**public function handleRequest($method, $path) {
-    *    foreach ($this->routes as $route) {
-    *        if ($route['method'] === $method && $route['path'] === $path) {
-    *            $callback = $route['callback'];
-    *            if (is_callable($callback)) {
-    *                // Si el callback es una función, llámala directamente
-    *                $callback();
-    *            } elseif (is_string($callback) && strpos($callback, '@') !== false) {
-    *                // Si el callback es una cadena en formato "Clase@metodo", crea una instancia de la clase y llama al método
-    *                list($class, $method) = explode('@', $callback);
-    *                $instance = new $class();
-    *                $instance->$method();
-    *            }
-    *            return;
-    *        }
-    *    }
-    *    // Si no se encuentra ninguna ruta coincidente, puedes mostrar una página de error o redirigir a una ruta predeterminada.
-    *    header("HTTP/1.0 404 Not Found");
+        foreach ($this->routes as $route) {
+            if ($route['method'] === $method && $route['path'] === $path) {
+                $callback = $route['callback'];
+                if (is_callable($callback)) {
+                    // Si el callback es una función, llámala directamente
+                    $callback();
+                } elseif (is_string($callback) && strpos($callback, '@') !== false) {
+                    // Si el callback es una cadena en formato "Clase@metodo", crea una instancia de la clase y llama al método
+                    list($class, $method) = explode('@', $callback);
+                    $instance = new $class();
+                    $instance->$method();
+                }
+                return;
+            }
+        }
+        // Si no se encuentra ninguna ruta coincidente, puedes mostrar una página de error o redirigir a una ruta predeterminada.
+        header("HTTP/1.0 404 Not Found");
     }**/
 
 
@@ -51,6 +51,39 @@
         echo "<br><br>";
     }**/
 
+
+    /*public function handleRequest($method, $path) {
+        $matchedRoute = null;
+
+        
+        foreach ($this->routes as $route) {
+            if ($route['method'] === $method && $route['path'] === $path) {
+                $matchedRoute = $route;
+                break;
+            }
+        }
+
+        if ($matchedRoute) {
+            $callback = $matchedRoute['callback'];
+            $this->executeCallback($callback);
+            return;
+        }
+
+        foreach ($this->routeGroups as $group) {
+            $prefix = $group['prefix'];
+            $callback = $group['callback'];
+
+            if (strpos($path, $prefix) === 0) {
+                $trimmedPath = substr($path, strlen($prefix));
+                $this->executeCallback($callback, $trimmedPath);
+                
+                return;
+            }
+        }
+
+        // Si no se encuentra ninguna ruta coincidente, puedes mostrar una página de error o redirigir a una ruta predeterminada.
+        header("HTTP/1.0 404 Not Found");
+    }*/
 
     //$trimmedPath = substr($path, strlen($prefix));
                 //if (is_callable($callback)) {
