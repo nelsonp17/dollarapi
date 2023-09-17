@@ -1,9 +1,9 @@
 <?php
 
-namespace Config;
+namespace App\Http\Models\Database;
 use mysqli;
 
-class Database {
+class Mysql {
     private $host = db_host;
     private $usuario = db_user;
     private $contrasena = db_password;

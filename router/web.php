@@ -1,9 +1,11 @@
 <?php
 
-use Router\Enrutador;
+use Router\Router;
+use App\Http\Middlewares\Middleware;
+use App\Http\Middlewares\AuthMiddleware;
 
-$router = new Enrutador();
 
+$router = new Router();
 /*
 // Middleware para autenticación
 $router->addMiddleware(function() {
@@ -47,6 +49,12 @@ $router->group('/api', function() use ($router)  {
         // Lógica del middleware para la ruta '/api/users'
         echo "Este es un middleware para la ruta de usuarios de la API <br>";
     });
+
+    $router->get('/users2', function() {
+        echo "Esta es la página de usuarios";
+
+
+    })->middleware(AuthMiddleware::class);
     
 
     $router->get('/user/{id}', function($matches) {
@@ -82,6 +90,8 @@ $router->group('/api', function() use ($router)  {
 $requestMethod = $_SERVER['REQUEST_METHOD'];
 $requestPath = $_SERVER['REQUEST_URI'];
 
+// agregar un middleware global
+$router->addMiddleware(Middleware::class);
 $router->handleRequest($requestMethod, $requestPath);
 
 // Verificar el código de respuesta HTTP

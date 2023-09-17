@@ -1,6 +1,6 @@
 <?php
 
-namespace Controllers\DollarSale;
+namespace App\Http\Controllers\DollarSale;
 
 
 class ViewsController extends DatabaseController{

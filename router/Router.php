@@ -2,7 +2,7 @@
 
 namespace Router;
 
-class Enrutador {
+class Router {
     private $routes = [];
     private $itemGroups = [];
     private $group = false;
@@ -91,11 +91,6 @@ class Enrutador {
         }
     }*/
 
-    private function executeMiddlewares($middlewares) {
-        foreach ($middlewares as $middleware) {
-            $middleware();
-        }
-    }
     public function addItemGroup($method, $path, $callback, $name = null, $middleware=null){
         $middlewares = [];
 
@@ -233,5 +228,27 @@ class Enrutador {
             $instance->$method($path);
         }
     }
+
+
+    private function executeMiddlewares($middlewares) {
+        $request = $_SERVER['REQUEST_METHOD']; // REQUEST_URI o REQUEST_METHOD
+        $next = function ($request) {
+            // Implementa aquí la lógica para llamar al siguiente middleware o controlador
+        };
+
+        foreach ($middlewares as $middleware) {
+            //$middleware();
+
+            if (is_callable($middleware)) {
+                $middleware();
+            } else{
+                $middlewareInstance = new $middleware();
+                $response = $middlewareInstance->handle($request, $next);
+            }
+        }
+    }
+
+
+    
 }
 
