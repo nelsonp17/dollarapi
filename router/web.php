@@ -17,6 +17,38 @@ $router->addRoute('POST', '/contact', function() {
     echo "Gracias por contactarnos";
 });
 
+
+$router->group('/api', function() use ($router)  {
+
+    $router->get('/users', function() {
+        echo "Esta es la página de usuarios";
+    });
+    $router->get('/user/{id}', function($matches) {
+        $userId = $matches[1]; 
+        echo "Usuario: ". $userId;
+    });
+
+    $router->post('/users', function() {
+        echo "Esta es la página de usuarios (POST)";
+    });
+});
+
+
+/**
+ * 
+ * $router->group('/api', function() use ($router) {
+ *     $router->get('/users', 'UserController@index');
+ *     $router->post('/users', 'UserController@store');
+ *     // ... otras rutas relacionadas con usuarios
+ * });
+ * 
+ * $router->group('/admin', function() use ($router) {
+ *     $router->get('/dashboard', 'AdminController@dashboard');
+ *     $router->get('/users', 'AdminController@users');
+ *     // ... otras rutas relacionadas con la administración
+ * });
+ */
+
 // Manejar la solicitud actual
 $requestMethod = $_SERVER['REQUEST_METHOD'];
 $requestPath = $_SERVER['REQUEST_URI'];
