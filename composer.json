@@ -11,7 +11,8 @@
     "require": {
         "spekulatius/phpscraper": "^1.0",
         "vlucas/phpdotenv": "^5.5",
-        "nesbot/carbon": "^2.70"
+        "nesbot/carbon": "^2.70",
+        "twig/twig": "^3.7"
     },
     "autoload": {
         "psr-4": {

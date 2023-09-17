@@ -217,6 +217,7 @@ class Router {
     }
 
     private function executeCallback($callback, $path = null) {
+
         if (is_callable($callback)) {
             //echo "hola mundo <br>";
             // Si el callback es una función, llámala directamente

@@ -4,7 +4,6 @@ use Router\Router;
 use App\Http\Middlewares\Middleware;
 use App\Http\Middlewares\AuthMiddleware;
 
-
 $router = new Router();
 /*
 // Middleware para autenticación
@@ -24,9 +23,7 @@ $router->get('/profile', function() {
 */
 
 // Definir rutas
-$router->addRoute('GET', '/', function() {
-    echo "¡Hola, esta es la página de inicio!";
-}, "home");
+$router->get('/', 'App\Http\Controllers\CompitWeb\LandingPageController@index');
 
 $router->addRoute('GET', '/about', function() {
     echo "Esta es la página de acerca de nosotros";
@@ -86,6 +83,7 @@ $router->group('/api', function() use ($router)  {
  * });
  */
 
+
 // Manejar la solicitud actual
 $requestMethod = $_SERVER['REQUEST_METHOD'];
 $requestPath = $_SERVER['REQUEST_URI'];
@@ -96,6 +94,8 @@ $router->handleRequest($requestMethod, $requestPath);
 
 // Verificar el código de respuesta HTTP
 $httpCode = http_response_code();
+
+
 
 // Manejar diferentes errores
 if($httpCode !== 200){

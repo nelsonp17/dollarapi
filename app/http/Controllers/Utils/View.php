@@ -3,6 +3,14 @@
 namespace App\Http\Controllers\Utils;
 
 class View{
+    public static $twig;
+    public static $loader;
+
+    public static function loaderStatic()
+    {
+        self::$loader = new \Twig\Loader\FilesystemLoader('Resource/Views');
+        self::$twig = new \Twig\Environment(self::$loader);
+    }
 
     // metodos estaticos
     public static function view($ruta) {
@@ -13,6 +21,10 @@ class View{
         } else {
             echo "La vista no existe";
         }
+    }
+    public static function render($route, $param = []){
+        self::loaderStatic();
+        echo self::$twig->render($route.".php", $param);
     }
     public static function assets($src) {
         $viewPath = __DIR__ . '/../../Resource/public/' . $src;
