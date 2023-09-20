@@ -7,9 +7,11 @@ use App\Http\Models\Database\Mysql;
 use App\Http\Controllers\Utils\Utils;
 
 class DatabaseController extends Controller {
-    public $utils = new Utils();
-    public $database = new Mysql();
+    public $utils = null;
+    public $database = null;
     public function __construct(){
+        $this->utils = new Utils();
+        $this->database = new Mysql();
         //parent::__construct(); // Llama al constructor de la clase padre para establecer la conexión a la base de datos
     }
     

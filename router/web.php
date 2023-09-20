@@ -37,8 +37,16 @@ $router->addRoute('POST', '/contact', function() {
 });
 
 
+$router->group('/api/dollar', function() use ($router)  {
+    $router->get('/current', 'App\Http\Controllers\DollarSale\ApiController@vercel');
+});
+$router->group('/api', function() use ($router)  {
+    $router->get('/twitter', 'App\Http\Controllers\Twitter\ApiController@run');
+});
 
 $router->group('/api', function() use ($router)  {
+
+    
 
     $router->get('/users', function() {
         echo "Esta es la página de usuarios";
