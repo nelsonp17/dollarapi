@@ -9,7 +9,8 @@
     ],
     "license": "MIT",
     "require": {
-        "spekulatius/phpscraper": "^1.0",
+        "php": ">=7.3",
+        "spekulatius/phpscraper": "^2.0",
         "vlucas/phpdotenv": "^5.5",
         "nesbot/carbon": "^2.70",
         "twig/twig": "^3.7",
