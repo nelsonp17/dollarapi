@@ -32,9 +32,9 @@ $router->addRoute('GET', '/about', function() {
     echo "Este es un middleware para la ruta de usuarios de la API <br>";
 });
 
-$router->addRoute('POST', '/contact', function() {
-    echo "Gracias por contactarnos";
-});
+//$router->addRoute('POST', '/contact', function() {
+//    echo "Gracias por contactarnos";
+//});
 
 
 $router->group('/api/dollar', function() use ($router)  {
